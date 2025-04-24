@@ -1,1 +1,17 @@
-spring.application.name=open-ai-chatgpt
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chatgpt_4o?currentSchema=chatgpt_4o
+    username: chatgpt_4o_app
+    password: strongPassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Liquibase handles schema creation
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
