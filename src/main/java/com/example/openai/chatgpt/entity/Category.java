@@ -40,12 +40,12 @@ public class Category {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Category category)) return false; // Лучше, чем getClass()
-        return id != null && id.equals(category.id); // Без дополнительной проверки id == null
+        if (!(o instanceof Category category)) return false;
+        return id != null && id.equals(category.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : super.hashCode(); // Использование super.hashCode() для уникальности несохранённых объектов
+        return id != null ? id.hashCode() : super.hashCode();
     }
 }
