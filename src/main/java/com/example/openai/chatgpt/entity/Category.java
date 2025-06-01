@@ -2,7 +2,6 @@ package com.example.openai.chatgpt.entity;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +35,6 @@ public class Category {
     @Column(name = "category_description")
     private String categoryDescription;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category")
     private List<Operation> operations;
 }
