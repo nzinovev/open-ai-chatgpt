@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,14 +28,26 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    private Long id;
 
     @Column(name = "category_name", nullable = false)
-    private String categoryName;
+    private String name;
 
     @Column(name = "category_description")
-    private String categoryDescription;
+    private String description;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Operation> operations;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category category)) return false; // Лучше, чем getClass()
+        return id != null && id.equals(category.id); // Без дополнительной проверки id == null
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : super.hashCode(); // Использование super.hashCode() для уникальности несохранённых объектов
+    }
 }

@@ -31,22 +31,34 @@ public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "operation_id", nullable = false)
-    private Long operationId;
+    private Long id;
 
     @Column(name = "operation_public_id", nullable = false, unique = true)
-    private String operationPublicId;
+    private String publicId;
 
     @Column(name = "operation_name", nullable = false)
-    private String operationName;
+    private String name;
 
     @Column(name = "operation_amount", nullable = false)
-    private BigDecimal operationAmount;
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "operation_type", nullable = false)
-    private OperationType operationType;
+    private OperationType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Operation operation)) return false;
+        return id != null && id.equals(operation.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : super.hashCode();
+    }
 }
