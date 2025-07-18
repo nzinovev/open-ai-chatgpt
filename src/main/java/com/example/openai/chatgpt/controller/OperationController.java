@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.openai.chatgpt.dto.CreateOperationRequest;
-import com.example.openai.chatgpt.entity.Operation;
+import com.example.openai.chatgpt.dto.OperationResponse;
 import com.example.openai.chatgpt.service.OperationService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class OperationController {
     private final OperationService operationService;
 
     @PostMapping
-    public ResponseEntity<Operation> createOperation(@RequestBody CreateOperationRequest request) {
-        Operation created = operationService.createOperation(request);
+    public ResponseEntity<OperationResponse> createOperation(@RequestBody CreateOperationRequest request) {
+        var created = operationService.createOperation(request);
         return ResponseEntity.ok(created);
     }
 }
