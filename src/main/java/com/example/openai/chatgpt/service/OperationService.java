@@ -1,5 +1,8 @@
 package com.example.openai.chatgpt.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.openai.chatgpt.dto.CreateOperationRequest;
@@ -8,6 +11,7 @@ import com.example.openai.chatgpt.dto.UpdateOperationRequest;
 import com.example.openai.chatgpt.entity.Category;
 import com.example.openai.chatgpt.entity.Operation;
 import com.example.openai.chatgpt.exception.BadRequestException;
+import com.example.openai.chatgpt.exception.NotFoundException;
 import com.example.openai.chatgpt.repository.CategoryRepository;
 import com.example.openai.chatgpt.repository.OperationRepository;
 
@@ -22,7 +26,7 @@ public class OperationService {
 
     public OperationResponse createOperation(CreateOperationRequest request) {
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new BadRequestException("Category not found"));
 
         Operation operation = Operation.builder()
                 .publicId(request.getOperationPublicId())
@@ -45,7 +49,7 @@ public class OperationService {
 
     public OperationResponse updateOperation(String publicId, UpdateOperationRequest request) {
         Operation operation = operationRepository.findOperationByPublicId(publicId)
-                .orElseThrow(() -> new RuntimeException("Operation not found with publicId: " + publicId));
+                .orElseThrow(() -> new BadRequestException("Operation not found with publicId: " + publicId));
 
         if (request.getOperationName() != null) {
             operation.setName(request.getOperationName());
@@ -76,6 +80,30 @@ public class OperationService {
                 .operationAmount(saved.getAmount())
                 .operationType(saved.getType())
                 .categoryId(saved.getCategory().getId())
+                .build();
+    }
+
+    public Page<OperationResponse> findAllOperations(int page, int size) {
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "operationId"));
+        Page<Operation> operations = operationRepository.findAll(pageable);
+
+        return operations.map(this::toDto);
+    }
+
+    public OperationResponse findByPublicId(String publicId) {
+        Operation operation = operationRepository.findOperationByPublicId(publicId)
+                .orElseThrow(() -> new NotFoundException("Operation not found with publicId: " + publicId));
+        return toDto(operation);
+    }
+
+    private OperationResponse toDto(Operation operation) {
+        return OperationResponse.builder()
+                .operationId(operation.getId())
+                .operationPublicId(operation.getPublicId())
+                .operationName(operation.getName())
+                .operationAmount(operation.getAmount())
+                .operationType(operation.getType())
+                .categoryId(operation.getCategory().getId())
                 .build();
     }
 }
