@@ -1,5 +1,7 @@
 package com.example.openai.chatgpt.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.example.openai.chatgpt.dto.CreateOperationRequest;
@@ -22,10 +24,10 @@ public class OperationService {
 
     public OperationResponse createOperation(CreateOperationRequest request) {
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new BadRequestException("Category not found"));
 
         Operation operation = Operation.builder()
-                .publicId(request.getOperationPublicId())
+                .publicId(UUID.randomUUID().toString())
                 .name(request.getOperationName())
                 .amount(request.getOperationAmount())
                 .type(request.getOperationType())
@@ -45,7 +47,7 @@ public class OperationService {
 
     public OperationResponse updateOperation(String publicId, UpdateOperationRequest request) {
         Operation operation = operationRepository.findOperationByPublicId(publicId)
-                .orElseThrow(() -> new RuntimeException("Operation not found with publicId: " + publicId));
+                .orElseThrow(() -> new BadRequestException("Operation not found with publicId: " + publicId));
 
         if (request.getOperationName() != null) {
             operation.setName(request.getOperationName());
