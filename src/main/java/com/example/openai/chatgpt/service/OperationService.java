@@ -39,14 +39,7 @@ public class OperationService {
                 .build();
 
         var saved = operationRepository.save(operation);
-        return OperationResponse.builder()
-                .operationId(saved.getId())
-                .operationPublicId(saved.getPublicId())
-                .operationName(saved.getName())
-                .operationAmount(saved.getAmount())
-                .operationType(saved.getType())
-                .categoryId(saved.getCategory().getId())
-                .build();
+        return toDto(saved);
     }
 
     public OperationResponse updateOperation(String publicId, UpdateOperationRequest request) {
@@ -75,18 +68,11 @@ public class OperationService {
 
         Operation saved = operationRepository.save(operation);
 
-        return OperationResponse.builder()
-                .operationId(saved.getId())
-                .operationPublicId(saved.getPublicId())
-                .operationName(saved.getName())
-                .operationAmount(saved.getAmount())
-                .operationType(saved.getType())
-                .categoryId(saved.getCategory().getId())
-                .build();
+        return toDto(saved);
     }
 
     public Page<OperationResponse> findAllOperations(int page, int size) {
-        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "operationId"));
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<Operation> operations = operationRepository.findAll(pageable);
 
         return operations.map(this::toDto);
