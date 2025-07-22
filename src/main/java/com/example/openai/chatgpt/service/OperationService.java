@@ -84,6 +84,13 @@ public class OperationService {
         return toDto(operation);
     }
 
+    public void deleteByPublicId(String publicId) {
+        Operation operation = operationRepository.findOperationByPublicId(publicId)
+                .orElseThrow(() -> new NotFoundException("Operation not found with publicId: " + publicId));
+    
+        operationRepository.delete(operation);
+    }
+
     private OperationResponse toDto(Operation operation) {
         return OperationResponse.builder()
                 .operationId(operation.getId())
