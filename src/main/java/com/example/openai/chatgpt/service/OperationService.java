@@ -1,5 +1,7 @@
 package com.example.openai.chatgpt.service;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +31,7 @@ public class OperationService {
                 .orElseThrow(() -> new BadRequestException("Category not found"));
 
         Operation operation = Operation.builder()
-                .publicId(request.getOperationPublicId())
+                .publicId(UUID.randomUUID().toString())
                 .name(request.getOperationName())
                 .amount(request.getOperationAmount())
                 .type(request.getOperationType())
