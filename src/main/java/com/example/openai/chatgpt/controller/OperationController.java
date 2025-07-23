@@ -19,6 +19,7 @@ import com.example.openai.chatgpt.dto.OperationResponse;
 import com.example.openai.chatgpt.dto.UpdateOperationRequest;
 import com.example.openai.chatgpt.service.OperationService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,7 +30,7 @@ public class OperationController {
     private final OperationService operationService;
 
     @PostMapping
-    public ResponseEntity<OperationResponse> createOperation(@RequestBody CreateOperationRequest request) {
+    public ResponseEntity<OperationResponse> createOperation(@RequestBody @Valid CreateOperationRequest request) {
         var created = operationService.createOperation(request);
         return ResponseEntity.ok(created);
     }
